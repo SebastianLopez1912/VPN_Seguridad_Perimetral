@@ -35,7 +35,7 @@ The project was developed during professional training practices by a team of 4 
 
 ### Network Diagram
 
-![Network Diagram](documentacion/Mapa_de_Red.png)
+![Network Diagram](documentacion/Mapa de Red.png)
 
 ## Features
 
