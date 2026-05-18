@@ -1,0 +1,191 @@
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment and secrets
+.env
+.env.*.local
+.env.local
+.env.ci
+.env.production
+secrets.*
+credentials
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.csr
+*.asc
+
+# SSH keys and WireGuard
+id_rsa
+id_rsa.pub
+id_ecdsa
+id_ecdsa.pub
+id_ed25519
+id_ed25519.pub
+wg0.conf
+wg-*.conf
+wireguard/
+wireguard/*.conf
+wireguard/*.key
+wireguard/*.pub
+wg-easy/
+wg-easy-data/
+wg-easy/db/
+peer_*.conf
+clients/
+clients/*.conf
+clients/*.key
+clients/*.pub
+*.wg
+*.private
+*.pub
+
+# Docker and compose
+docker-compose.yml
+# QUITADOS porque deben subirse:
+# loki-config.yml
+# promtail-config.yml
+docker-compose.override.yml
+docker-compose.*.override.yml
+docker-compose.local.yml
+docker-compose.dev.yml
+docker-compose.prod.yml
+**/docker-compose.override.yml
+**/docker-compose.*.override.yml
+docker-compose.yml.backup
+.docker/
+docker/*.env
+docker/*.secret
+compose-secrets.yml
+
+# Service data and volumes
+volumes/
+data/
+db_data/
+postgres_data/
+portainer_data/
+portainer/
+grafana_data/
+grafana/
+backups/
+backups_*/
+
+# Logs and runtime
+*.log
+logs/
+tmp/
+run/
+pids/
+*.pid
+/var/log/git_sync.log
+
+# Permitir carpeta logs del proyecto
+!logs/
+!logs/**
+!logs/capturas/
+!logs/capturas/**
+
+# No subir logs reales
+logs/iptables.log
+logs/wg.log
+
+# Permitir subir el log anonimizado
+!logs/iptables_anon.log
+
+# Build artifacts
+build/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pytest_cache/
+.pytest_cache/
+venv/
+env/
+ENV/
+.venv/
+pip-wheel-metadata/
+*.egg-info/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+.pnp.*
+.pnp.js
+
+# Terraform and infra
+.terraform/
+*.tfstate
+*.tfstate.backup
+crash.log
+override.tf
+override.tf.json
+terraform.tfvars
+terraform.tfvars.json
+
+# Backups and exports
+*.bak
+*.old
+*.backup
+*.sql
+*.sqlite
+*.tar
+*.gz
+*.zip
+
+# Project evidences and captures
+evidences/
+screenshots/
+captures/
+capture_*.pcap
+pcap/
+wireshark/
+trello_export_*.json
+miro_export_*.zip
+miro_exports/
+exports/
+private_docs/
+docs/private/
+
+# CI and coverage
+ci-artifacts/
+coverage/
+coverage.xml
+*.lcov
+
+# Misc
+*.swp
+*~
+*.tmp
+*.cache
+
+# Loki data
+loki-data/
+loki-wal/
+
+# ============================
+# REGLAS ACORDADAS
+# ============================
+
+# 1) Ignorar solo alertas_telegram.sh
+Scripts/alertas_telegram.sh
+
+# 2) Ignorar TODO Config/ excepto el docker-compose de ejemplo
+Config/*
+!Config/docker-compose.ejemplo_despliegue.yml
+
