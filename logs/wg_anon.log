@@ -1,0 +1,54 @@
+interface: wg0
+  public key: SERVER_PUBLIC_KEY
+  private key: (hidden)
+  listening port: 51820
+
+peer: PEER_1
+  preshared key: (hidden)
+  endpoint: CLIENT1_PUBLIC_IP:58849
+  allowed ips: 10.10.0.6/32
+  latest handshake: 44 seconds ago
+  transfer: 12.05 MiB received, 12.64 MiB sent
+
+peer: PEER_2
+  preshared key: (hidden)
+  endpoint: CLIENT2_PUBLIC_IP:54541
+  allowed ips: 10.10.0.5/32
+  latest handshake: 2 minutes, 4 seconds ago
+  transfer: 12.73 MiB received, 36.46 MiB sent
+
+peer: PEER_3
+  preshared key: (hidden)
+  endpoint: CLIENT2_PUBLIC_IP:53484
+  allowed ips: 10.10.0.4/32
+  latest handshake: 37 minutes, 14 seconds ago
+  transfer: 62.18 KiB received, 442.45 KiB sent
+
+peer: PEER_4
+  preshared key: (hidden)
+  endpoint: CLIENT1_PUBLIC_IP:58296
+  allowed ips: 10.10.0.3/32
+  latest handshake: 5 hours, 14 minutes, 5 seconds ago
+  transfer: 112.39 KiB received, 1.13 MiB sent
+
+peer: PEER_5
+  preshared key: (hidden)
+  endpoint: CLIENT1_PUBLIC_IP:61898
+  allowed ips: 10.10.0.2/32
+  latest handshake: 5 hours, 15 minutes, 6 seconds ago
+  transfer: 367.52 KiB received, 31.40 MiB sent
+
+peer: PEER_6
+  preshared key: (hidden)
+  endpoint: CLIENT1_PUBLIC_IP:54707
+  allowed ips: 10.10.0.8/32
+  latest handshake: 13 hours, 57 minutes, 39 seconds ago
+  transfer: 286.24 KiB received, 259.80 KiB sent
+
+peer: PEER_7
+  preshared key: (hidden)
+  endpoint: CLIENT1_PUBLIC_IP:50027
+  allowed ips: 10.10.0.7/32
+  latest handshake: 15 hours, 45 minutes, 22 seconds ago
+  transfer: 11.46 MiB received, 10.48 MiB sent
+

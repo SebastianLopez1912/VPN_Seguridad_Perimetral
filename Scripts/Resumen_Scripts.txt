@@ -1,0 +1,18 @@
+===============================
+RESUMEN DEL SISTEMA DE AUDITORÍAS Y MONITORIZACIÓN
+===============================
+
+1. Auditoría de WireGuard
+Se implementó un script encargado de revisar el estado del servicio WireGuard y generar un informe automático.
+El script comprueba si la interfaz wg0 está activa, identifica los peers configurados y muestra su estado basándose en la actividad de handshake de las últimas 12 horas. También registra la fecha del último handshake en formato legible y contabiliza los peers con actividad en las últimas 24 horas.
+
+Además, analiza los logs del sistema para detectar errores técnicos reales relacionados con WireGuard (fallos de handshake, problemas de la interfaz wg0, errores del kernel, etc.) ocurridos en las últimas 24 horas.
+Toda la información se envía automáticamente al grupo de Telegram mediante el bot configurado.
+El script está programado en cron para ejecutarse cada 12 horas.
+
+2. Sistema de Monitorización
+Se desarrolló un script de monitorización general del servidor que revisa el estado de los recursos y servicios críticos.
+El sistema recopila información sobre carga de CPU, uso de RAM, espacio en disco, estado de servicios esenciales, estado de contenedores Docker, intentos fallidos de acceso SSH, actividad de Fail2ban y disponibilidad de actualizaciones del sistema.
+
+El informe generado se envía automáticamente al mismo bot de Telegram, manteniendo una estructura clara y homogénea con la auditoría de WireGuard.
+Se limpiaron tareas antiguas del cron pertenecientes al sistema previo y se dejó el entorno preparado para añadir nuevas tareas de monitorización según se vayan ampliando.
