@@ -1,0 +1,266 @@
+========================================================
+          INFORME DE AUDITORÍA
+     Monitorización, Logs y Auditoría
+========================================================
+
+FECHA DE LA AUDITORÍA:
+Auditor/es:
+Ubicación de los logs: /home/proyecto/Proyecto_Vpn_Seguridad_Perimetral/logs/
+
+--------------------------------------------------------
+1. ACCESOS VPN (WireGuard)
+Responsable: Jorge
+--------------------------------------------------------
+
+Accesos exitosos (obtenidos mediante wg show):
+
+1. Peer: PEER_PUBLIC_KEY_1
+   IP asignada: 10.10.0.6
+   Último handshake: 44 segundos antes de la exportación
+   Observaciones: Conexión activa y estable
+
+2. Peer: PEER_PUBLIC_KEY_2
+   IP asignada: 10.10.0.5
+   Último handshake: 2 minutos, 4 segundos
+   Observaciones: Conexión reciente
+
+3. Peer: PEER_PUBLIC_KEY_3
+   IP asignada: 10.10.0.4
+   Último handshake: 37 minutos
+   Observaciones: Conexión previa, no activa actualmente
+
+4. Peer: PEER_PUBLIC_KEY_4
+   IP asignada: 10.10.0.3
+   Último handshake: 5 horas, 14 minutos
+   Observaciones: Conexión antigua
+
+5. Peer: PEER_PUBLIC_KEY_6
+   IP asignada: 10.10.0.2
+   Último handshake: 5 horas, 15 minutos
+   Observaciones: Conexión antigua
+
+6. Peer: PEER_PUBLIC_KEY_6
+   IP asignada: 10.10.0.8
+   Último handshake: 13 horas, 57 minutos
+   Observaciones: Conexión muy antigua
+
+7. Peer: PEER_PUBLIC_KEY_7
+   IP asignada: 10.10.0.7
+   Último handshake: 15 horas, 45 minutos
+   Observaciones: Conexión muy antigua
+
+Ubicación del archivo exportado:
+- /home/proyecto/Proyecto_Vpn_Seguridad_Perimetral/logs/wg.log
+
+--------------------------------------------------------
+Intentos fallidos (registrados por el firewall)
+Responsable: Jorge
+--------------------------------------------------------
+
+1. Fecha/hora: Feb 10 17:21:21
+   IP origen: 162.142.125.133
+   Puerto destino: TCP/64635
+   Regla aplicada: IPTABLES_INPUT_DROP
+
+2. Fecha/hora: Feb 10 17:21:27
+   IP origen: 103.109.234.88
+   Puerto destino: UDP/123
+   Regla aplicada: IPTABLES_INPUT_DROP
+
+3. Fecha/hora: Feb 10 17:21:45
+   IP origen: 204.76.203.18
+   Puerto destino: TCP/80
+   Regla aplicada: IPTABLES_INPUT_DROP
+
+4. Fecha/hora: Feb 10 17:21:46
+   IP origen: 162.142.125.246
+   Puerto destino: UDP/7958
+   Regla aplicada: IPTABLES_INPUT_DROP
+
+5. Fecha/hora: Feb 10 17:21:59
+   IP origen: 167.94.138.134
+   Puerto destino: TCP/995
+   Regla aplicada: IPTABLES_INPUT_DROP
+
+Ubicación del archivo exportado:
+- /home/proyecto/Proyecto_Vpn_Seguridad_Perimetral/logs/iptables.log
+
+--------------------------------------------------------
+2. FIREWALL (UFW/IPTABLES)
+Responsable: Jorge
+--------------------------------------------------------
+
+Intentos bloqueados: Últimos 5
+
+Intento 1:
+- Fecha/hora: Feb 10 17:22:23
+- IP origen: 193.142.146.230
+- Puerto/protocolo: TCP / 8888
+- Regla aplicada: IPTABLES_INPUT_DROP
+
+Intento 2:
+- Fecha/hora: Feb 10 17:22:42
+- IP origen: 193.163.125.225
+- Puerto/protocolo: TCP / 4840
+- Regla aplicada: IPTABLES_INPUT_DROP
+
+Intento 3:
+- Fecha/hora: Feb 10 17:21:59
+- IP origen: 167.94.138.134
+- Puerto/protocolo: TCP / 995
+- Regla aplicada: IPTABLES_INPUT_DROP
+
+Intento 4:
+- Fecha/hora: Feb 10 17:21:46
+- IP origen: 162.142.125.246
+- Puerto/protocolo: UDP / 7958
+- Regla aplicada: IPTABLES_INPUT_DROP
+
+Intento 5:
+- Fecha/hora: Feb 10 17:21:45
+- IP origen: 204.76.203.18
+- Puerto/protocolo: TCP / 80
+- Regla aplicada: IPTABLES_INPUT_DROP
+
+Eventos relevantes:
+- Se observan múltiples intentos de escaneo desde varias IPs externas.
+- Algunos orígenes repiten intentos en distintos puertos, indicando actividad automatizada (bot o scanner).
+- El firewall está bloqueando correctamente todo el tráfico no autorizado.
+
+Ubicación del archivo exportado:
+- /home/proyecto/Proyecto_Vpn_Seguridad_Perimetral/logs/iptables.log
+
+--------------------------------------------------------
+3. CAPTURAS WIRESHARK
+Responsable: Susana
+--------------------------------------------------------
+
+Cifrado del túnel VPN:
+- Archivo: wireguard.pcapng
+- Descripción: Se capturó tráfico en el puerto UDP 51820. El análisis del payload muestra datos ilegibles (protocolo WireGuard), confirmando que el contenido de la navegación está cifrado y no es visible para observadores externos.
+
+Bloqueo externo sin VPN:
+- Archivo: bloqueo.pcapng
+- Descripción: Se realizaron intentos de acceso vía navegador (HTTP) sin la VPN activa. La captura muestra múltiples paquetes "TCP Retransmission" desde el cliente, indicando que el servidor descarta silenciosamente los paquetes (DROP) o rechaza la conexión, impidiendo el acceso no autorizado.
+
+Ubicación de capturas:
+- /home/proyecto/Proyecto_Vpn_Seguridad_Perimetral/logs/capturas/
+
+--------------------------------------------------------
+4. ESCANEO NMAP EXTERNO
+Responsable: Susana
+--------------------------------------------------------
+
+Comando ejecutado:
+nmap -sU -sT -Pn -p 22,80,51820 SERVER_PUBLIC_IP
+
+Resultados obtenidos:
+- Puertos UDP: 51820/udp open|filtered (Servicio WireGuard activo y oculto).
+- Puertos TCP: 22/tcp y 80/tcp aparecen como "closed" (Cerrados/Rechazados).
+
+Observaciones:
+- El servidor cumple la política de mínima exposición.
+- No hay servicios web ni de administración expuestos a Internet sin pasar por la VPN.
+- El único punto de entrada visible es el puerto UDP de la VPN.
+
+Archivo del escaneo:
+- nmap_externo.txt
+
+Ubicación del archivo:
+- /home/proyecto/Proyecto_Vpn_Seguridad_Perimetral/logs/
+
+--------------------------------------------------------
+5. ROTACIÓN Y RETENCIÓN DE LOGS
+Responsable: Nacho
+--------------------------------------------------------
+
+Política aplicada:
+- Rotación semanal (según configuración en /etc/logrotate.d/rsyslog)
+- Retención de 4 rotaciones
+- Compresión automática con gzip
+- Compresión diferida mediante delaycompress (el archivo más reciente no se comprime)
+- Eliminación automática de logs antiguos al superar el límite establecido
+- Recarga automática de rsyslog tras cada rotación
+
+Archivos afectados:
+- /var/log/syslog
+- /var/log/kern.log
+- /var/log/auth.log
+- /var/log/user.log
+- /var/log/cron.log
+- /var/log/mail.log
+
+Verificación:
+- Rotación forzada manualmente con: sudo logrotate -f /etc/logrotate.conf
+- Archivos rotados generados correctamente: syslog.1, syslog.2.gz, kern.log.1, kern.log.2.gz, etc.
+- Acceso verificado a logs rotados mediante:
+  - sudo head /var/log/syslog.1
+  - sudo zcat /var/log/syslog.2.gz | head
+  - sudo head /var/log/kern.log.1
+  - sudo zcat /var/log/kern.log.2.gz | head
+- No se detectaron errores durante la rotación
+
+Observaciones:
+- iptables queda cubierto automáticamente porque escribe en syslog y kern.log
+- WireGuard no genera logs propios; su auditoría se realiza mediante wg show
+- La política aplicada evita el crecimiento descontrolado de los logs del sistema
+- Los archivos rotados permanecen accesibles para auditoría y análisis
+
+--------------------------------------------------------
+6. MÉTRICAS DE AUDITORÍA
+Responsable: Sebastián
+--------------------------------------------------------
+
+1. Eventos kern_log (Actividad VPN):
+   - Métrica: Monitorización y actividad del túnel.
+   - Fuente: /var/log/kern.log
+   - Interpretación: Registra el establecimiento de túneles cifrados. Permite auditar qué IPs realizan el saludo (handshake) correctamente. Un flujo constante indica que la VPN está operativa y cursando tráfico cifrado.
+
+2. Paquetes Bloqueados (Firewall):
+   - Métrica: Conteo de paquetes rechazados (DROP/REJECT).
+   - Fuente: /var/log/kern.log (o ufw.log).
+   - Interpretación: Visualiza la efectividad del muro perimetral. Muestra "el ruido" de Internet chocando contra el firewall. Un número elevado de bloqueos es normal y positivo, indicando que el sistema está protegiendo los puertos internos de escaneos no autorizados.
+
+3. Intentos Fallidos SSH (Seguridad de Acceso):
+   - Métrica: Intentos de autenticación rechazados.
+   - Fuente: /var/log/auth.log.
+   - Interpretación: Dado que la autenticación por contraseña está DESHABILITADA en el servidor (Solo Key-Auth), este panel monitoriza intentos de conexión inválidos.
+   - Estado esperado: El objetivo es mantener esta métrica controlada, confirmando que el servidor rechaza automáticamente cualquier conexión que no presente una llave criptográfica válida, anulando vectores de ataque por fuerza bruta de contraseñas.
+
+Capturas/Gráficos:
+- Archivo de evidencia: grafana_paneles.png
+- Descripción: Visualización centralizada en Grafana que integra la actividad del Kernel, el rechazo de tráfico perimetral y la integridad del control de acceso SSH.
+
+Ubicación del archivo:
+- /home/proyecto/Proyecto_Vpn_Seguridad_Perimetral/logs/capturas/
+
+--------------------------------------------------------
+7. CONCLUSIONES
+Responsable: Grupo completo
+--------------------------------------------------------
+
+Estado general:
+El sistema se encuentra estable, seguro y completamente monitorizado.
+La VPN funciona correctamente, el firewall bloquea todo el tráfico no autorizado y los logs muestran un comportamiento coherente con un entorno bien protegido.
+Las auditorías y la monitorización automatizada garantizan visibilidad continua del estado del servidor.
+
+Riesgos detectados:
+- Actividad constante de escaneos externos y accesos no autorizados, habitual en servidores expuestos a Internet.
+- Tráfico automatizado procedente de bots que prueban puertos y servicios.
+- Dependencia del puerto UDP 51820 como único punto de entrada, lo que requiere mantener su supervisión.
+
+Mejoras aplicadas:
+- Sistema de auditoría automatizada de WireGuard con envío periódico a Telegram.
+- Monitorización del servidor con control de servicios críticos, SSH, Fail2ban y actualizaciones.
+- Paneles de Grafana ampliados con métricas relevantes del sistema.
+- Alertas en tiempo real para caídas de servicios o actividad sospechosa.
+- Capturas de tráfico que validan el cifrado del túnel VPN y el bloqueo de accesos externos.
+- Escaneo externo Nmap que confirma la mínima exposición del servidor.
+
+Mejoras pendientes:
+En este momento no se identifican mejoras críticas pendientes.
+El sistema queda preparado para ampliaciones futuras según necesidades del proyecto.
+
+========================================================
+FIN DEL INFORME
+========================================================

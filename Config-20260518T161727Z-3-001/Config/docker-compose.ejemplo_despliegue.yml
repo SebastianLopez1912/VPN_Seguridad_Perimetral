@@ -1,0 +1,94 @@
+version: "3.8"
+
+services:
+
+  wg-easy:
+    image: weejewel/wg-easy
+    container_name: wg-easy
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - WG_HOST=MI_IP_PUBLICA
+      - WG_PORT=51820
+      - WG_DEFAULT_ADDRESS=10.10.0.x
+      - WG_DEFAULT_DNS=1.1.1.1
+      - WG_EASY_MAX_CLIENTS=100
+      - PASSWORD=CAMBIAR_ESTA_CONTRASEÑA
+    volumes:
+      - ./data/wireguard:/etc/wireguard
+    ports:
+      - "51821:51820/udp"
+    networks:
+      - red_docker
+    restart: unless-stopped
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/portainer:/data
+    ports:
+      - "MI_IP_INTERNA:9000:9000"
+    networks:
+      - red_docker
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    ports:
+      - "MI_IP_INTERNA:3000:3000"
+    user: "472:472"
+    networks:
+      - red_docker
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: loki
+    command: -config.file=/etc/loki/local-config.yaml -server.http-listen-port=3100 -server.http-listen-address=0.0.0.0
+    volumes:
+      - ./loki-config.yml:/etc/loki/local-config.yml
+      - ./data/loki:/loki
+    ports:
+      - "MI_IP_INTERNA:3100:3100"
+    user: "10001:10001"
+    networks:
+      - red_docker
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: promtail
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - /var/log:/var/log
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yml
+    networks:
+      - red_docker
+    restart: unless-stopped
+
+  web:
+    image: nginx:alpine
+    container_name: web
+    ports:
+      - "MI_IP_INTERNA:80:80"
+    networks:
+      - red_docker
+    restart: unless-stopped
+
+volumes:
+  grafana-data:
+  loki-data:
+  loki-rules:
+
+networks:
+  red_docker:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1350
+
